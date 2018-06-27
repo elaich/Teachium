@@ -1,72 +1,63 @@
 package Teachium.Teachium.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import Teachium.Teachium.Api.AdminApi;
 import Teachium.Teachium.Api.AdminApiController;
 import Teachium.Teachium.domain.AdminService;
 import Teachium.Teachium.domain.Message;
 import Teachium.Teachium.domain.Utilisateur;
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
 public class AdminApiTest {
-
-  @Test
-  public void testGetMessagesApi() {
-    AdminService adminService = mock(AdminService.class);
-    Message[] mockList = { mock(Message.class), mock(Message.class) };
-    when(adminService.getMessages()).thenReturn(mockList);
-
-    AdminApi adminApi = new AdminApiController(adminService);
-    Message[] messages = adminApi.getMessages();
-    assertEquals(messages, mockList);
-  }
-
-  @Test
-  public void testGetDemandesDinscriptionApi() {
-    AdminService adminService = mock(AdminService.class);
-    Utilisateur[] mockList = {
-      mock(Utilisateur.class),
-      mock(Utilisateur.class)
-    };
-    when(adminService.getDemandesDinscriptions()).thenReturn(mockList);
-
-    AdminApi adminApi = new AdminApiController(adminService);
-    Utilisateur[] users = adminApi.getDemandesDinscription();
-    assertEquals(users, mockList);
-  }
+	AdminService adminService;
+	AdminApi adminApi;
+	
+	@BeforeEach
+	public void setUp() {
+		  adminService = mock(AdminService.class);
+		  adminApi = new AdminApiController(adminService);
+	}
 
   @Test
   public void testGetDemandesDinscriptionFormatteurApi() {
     AdminService adminService = mock(AdminService.class);
-    Utilisateur[] mockList = {
-      mock(Utilisateur.class),
-      mock(Utilisateur.class)
-    };
+    List<Utilisateur> mockList = new ArrayList<Utilisateur>();
+    mockList.add(mock(Utilisateur.class));
+    mockList.add(mock(Utilisateur.class));
+    
     when(adminService.getDemandesDinscriptionsFormatteurs()).thenReturn(
       mockList
     );
 
     AdminApi adminApi = new AdminApiController(adminService);
-    Utilisateur[] users = adminApi.getDemandesDinscriptionFormatteurs();
+    List<Utilisateur> users = adminApi.getDemandesDinscriptionFormatteurs();
     assertEquals(users, mockList);
   }
 
   @Test
   public void testGetDemandesDinscriptionAppreneurApi() {
     AdminService adminService = mock(AdminService.class);
-    Utilisateur[] mockList = {
-      mock(Utilisateur.class),
-      mock(Utilisateur.class)
-    };
+    List<Utilisateur> mockList = new ArrayList<Utilisateur>();
+    mockList.add(mock(Utilisateur.class));
+    mockList.add(mock(Utilisateur.class));
+    
     when(adminService.getDemandesDinscriptionsAppreneurs()).thenReturn(
       mockList
     );
 
     AdminApi adminApi = new AdminApiController(adminService);
-    Utilisateur[] users = adminApi.getDemandesDinscriptionAppreneurs();
+    List<Utilisateur> users = adminApi.getDemandesDinscriptionAppreneurs();
     assertEquals(users, mockList);
   }
 
@@ -74,10 +65,14 @@ public class AdminApiTest {
   public void testAccepterUtilisateurApi() {
     AdminService adminService = mock(AdminService.class);
     AdminApi adminApi = new AdminApiController(adminService);
-
-    adminApi.accepterUtilisateur("b11");
-
-    verify(adminService).ajouterUtilisateur("b11");
+    Utilisateur expected = new Utilisateur("Marouane", "Elaich", "APPRENEUR");
+    when(adminService.ajouterUtilisateur("b11")).thenReturn(expected);
+    
+    Map<String, String> params = new HashMap<String, String>();
+    params.put("id", "b11");
+    Utilisateur utilisateur = adminApi.accepterUtilisateur(params);
+    
+    assertEquals(utilisateur, expected);
   }
 
   @Test
@@ -93,7 +88,9 @@ public class AdminApiTest {
   public void testAccepterFormationApi() {
     AdminService adminService = mock(AdminService.class);
     AdminApi adminApi = new AdminApiController(adminService);
-    adminApi.accepterFormation("b11");
+    Map<String, String> params = new HashMap<String, String>();
+    params.put("id", "b11");
+    adminApi.accepterFormation(params);
 
     verify(adminService).ajouterFormation("b11");
   }
@@ -106,5 +103,28 @@ public class AdminApiTest {
 
     verify(adminService).supprimerFormation("b11");
   }
+  
+  @Test
+  public void testGetMessagesApi() {
+	  List<Message> mockMessages = new ArrayList<Message>();
+	  mockMessages.add(new Message("text", "from", "to"));
+	  mockMessages.add(new Message("text is very long", "Marouane", "admin"));
+
+	  when(adminService.getMessages(null)).thenReturn(mockMessages);
+	  List<Message> messages = adminApi.getMessages("username");
+	  assertEquals(mockMessages, messages);
+  }
+  
+  @Test 
+  public void testGetMessageApi() {
+	  Message message = new Message("text", "from", "to");
+	  when(adminService.getMessage("ID")).thenReturn(message);
+	  Message result = adminApi.getMessage("ID");
+	  
+	  verify(adminService).getMessage("ID");
+	  assertEquals(result, message);
+
+  }
+
 }
 

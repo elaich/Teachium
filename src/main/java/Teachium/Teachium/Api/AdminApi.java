@@ -1,25 +1,29 @@
 package Teachium.Teachium.Api;
 
+import java.util.List;
+import java.util.Map;
+
 import Teachium.Teachium.domain.Message;
 import Teachium.Teachium.domain.Utilisateur;
 
 public interface AdminApi {
 
-  void accepterUtilisateur(String string);
+	Utilisateur accepterUtilisateur(Map<String, String> params);
 
-  void supprimerUtilisateur(String string);
+	void supprimerUtilisateur(String string);
 
-  void accepterFormation(String string);
+	void accepterFormation(Map<String, String> params);
 
-  void supprimerFormation(String string);
+	void supprimerFormation(String string);
 
-  Utilisateur[] getDemandesDinscription();
+	List<Utilisateur> getDemandesDinscription();
 
-  Utilisateur[] getDemandesDinscriptionAppreneurs();
+	List<Utilisateur> getDemandesDinscriptionAppreneurs();
 
-  Utilisateur[] getDemandesDinscriptionFormatteurs();
+	List<Utilisateur> getDemandesDinscriptionFormatteurs();
 
-  Message[] getMessages();
+	List<Message> getMessages(String username);
+
+	Message getMessage(String string);
 
 }
-

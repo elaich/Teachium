@@ -1,24 +1,31 @@
 package Teachium.Teachium.domain;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface AdminService {
 
-  public boolean ajouterUtilisateur(String id);
+	public Utilisateur ajouterUtilisateur(String id);
 
-  public boolean supprimerUtilisateur(String id);
+	public boolean supprimerUtilisateur(String id);
 
-  public boolean ajouterFormation(String id);
+	public boolean ajouterFormation(String id);
 
-  public boolean supprimerFormation(String string);
+	public boolean supprimerFormation(String string);
 
-  public Utilisateur[] getDemandesDinscriptions();
+	public List<Utilisateur> getDemandesDinscriptions();
 
-  public Utilisateur[] getDemandesDinscriptionsAppreneurs();
+	public List<Utilisateur> getDemandesDinscriptionsAppreneurs();
 
-  public Utilisateur[] getDemandesDinscriptionsFormatteurs();
+	public List<Utilisateur> getDemandesDinscriptionsFormatteurs();
 
-  public Message[] getMessages();
+	public List<Message> getMessages(String username);
+
+	public Message getMessage(String string);
+
+	public void readMessage(String id);
+
+	public Utilisateur getUser(String username);
+
+	public Utilisateur refuserUtilisateur(String id);
 
 }
-

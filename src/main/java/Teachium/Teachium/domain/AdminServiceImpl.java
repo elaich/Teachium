@@ -1,26 +1,24 @@
 package Teachium.Teachium.domain;
 
-import Teachium.Teachium.database.TeachiumDatabase;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import Teachium.Teachium.database.TeachiumDatabase;
+
+@Service
 public class AdminServiceImpl implements AdminService {
   private TeachiumDatabase teachiumDatabase;
 
+  @Autowired
   public AdminServiceImpl(TeachiumDatabase teachiumDatabase) {
     // TODO Auto-generated constructor stub
     this.teachiumDatabase = teachiumDatabase;
   }
 
-  public boolean ajouterUtilisateur(String id) {
-    try {
-      this.teachiumDatabase.accepterUtilisateur(id);
-      return true;
-    } catch(Exception e) {// TODO Auto-generated catch block
-      //e.printStackTrace();
-
-      return false;
-    }
+  public Utilisateur ajouterUtilisateur(String id) {
+      return this.teachiumDatabase.accepterUtilisateur(id);
   }
 
   public boolean supprimerUtilisateur(
@@ -30,55 +28,70 @@ public class AdminServiceImpl implements AdminService {
     try {
       this.teachiumDatabase.supprimerUtilisateur(id);
       return true;
-    } catch(Exception e) {//e.printStackTrace();
-    }
+    } catch(Exception e) //e.printStackTrace();
+    {}
     return false;
   }
 
   public boolean ajouterFormation(String id) {
-    try {
       this.teachiumDatabase.accepterFormation(id);
       return true;
-    } catch(Exception e) {//e.printStackTrace();
-    } // TODO Auto-generated method stub
-
-    return false;
   }
 
   public boolean supprimerFormation(String id) {
     try {
       this.teachiumDatabase.supprimerFormation(id);
       return true;
-    } catch(Exception e) {//e.printStackTrace();
-    } // TODO Auto-generated method stub
+    } catch(Exception e) //e.printStackTrace();
+    {} // TODO Auto-generated method stub
 
     return false;
   }
 
-  public Utilisateur[] getDemandesDinscriptions(
+  public List<Utilisateur> getDemandesDinscriptions(
 
   ) {// TODO Auto-generated method stub
 
-    return null;
+    return this.teachiumDatabase.getDemandesDinscriptions();
   }
 
-  public Utilisateur[] getDemandesDinscriptionsAppreneurs(
-
-  ) {// TODO Auto-generated method stub
-
+  public List<Utilisateur> getDemandesDinscriptionsAppreneurs() {
     return this.teachiumDatabase.getDemandesDinscriptionsAppreneurs();
   }
 
-  public Utilisateur[] getDemandesDinscriptionsFormatteurs(
+  public List<Utilisateur> getDemandesDinscriptionsFormatteurs(
 
   ) {// TODO Auto-generated method stub
 
     return this.teachiumDatabase.getDemandesDinscriptionsFormatteurs();
   }
 
-  public Message[] getMessages() {
-    return this.teachiumDatabase.getAdminMessages();
+  public List<Message> getMessages(String username) {
+	  Utilisateur user = this.teachiumDatabase.getUtilisateurByUsername(username);
+	  return this.teachiumDatabase.getMessagesByTo(user.getId());
   }
+
+@Override
+public Message getMessage(String string) {
+	return this.teachiumDatabase.getAdminMessage(string);
+}
+
+@Override
+public void readMessage(String id) {
+	this.teachiumDatabase.readMessage(id);
+}
+
+@Override
+public Utilisateur getUser(String username) {
+	// TODO Auto-generated method stub
+
+	return this.teachiumDatabase.getUtilisateurByUsername(username);
+}
+
+@Override
+public Utilisateur refuserUtilisateur(String id) {
+	return this.teachiumDatabase.refusterUtilisateur(id);
+}
 
 }
 

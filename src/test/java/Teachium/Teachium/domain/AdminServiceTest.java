@@ -1,14 +1,19 @@
 package Teachium.Teachium.domain;
 
-import Teachium.Teachium.database.TeachiumDatabase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import Teachium.Teachium.database.TeachiumDatabase;
 
 public class AdminServiceTest {
   TeachiumDatabase databaseMock;
@@ -22,55 +27,45 @@ public class AdminServiceTest {
 
   @Test
   public void testGetMessages() {
-    Message[] mockList = { mock(Message.class), mock(Message.class) };
+	  List<Message> mockList = new ArrayList<Message>();
+	  mockList.add(new Message("text", "from", "to"));
+	  mockList.add(new Message("text is very long", "Marouane", "admin"));
     when(databaseMock.getAdminMessages()).thenReturn(mockList);
 
-    Message[] messages = service.getMessages();
+    List<Message> messages = service.getMessages(null);
     assertEquals(messages, mockList);
   }
 
   @Test
   public void testGetDemandesDinscriptionFormatteurs() throws Exception {
-    Utilisateur[] mockList = {
-      mock(Utilisateur.class),
-      mock(Utilisateur.class)
-    };
+	    List<Utilisateur> mockList = new ArrayList<Utilisateur>();
+	    mockList.add(mock(Utilisateur.class));
+	    mockList.add(mock(Utilisateur.class));
     when(databaseMock.getDemandesDinscriptionsFormatteurs()).thenReturn(
       mockList
     );
 
-    Utilisateur[] users = service.getDemandesDinscriptionsFormatteurs();
+    List<Utilisateur> users = service.getDemandesDinscriptionsFormatteurs();
     assertEquals(users, mockList);
   }
 
   @Test
   public void testGetDemandesDinscriptionAppreneurs() throws Exception {
-    Utilisateur[] mockList = {
-      mock(Utilisateur.class),
-      mock(Utilisateur.class)
-    };
+	    List<Utilisateur> mockList = new ArrayList<Utilisateur>();
+	    mockList.add(mock(Utilisateur.class));
+	    mockList.add(mock(Utilisateur.class));
     when(databaseMock.getDemandesDinscriptionsAppreneurs()).thenReturn(
       mockList
     );
 
-    Utilisateur[] users = service.getDemandesDinscriptionsAppreneurs();
+    List<Utilisateur> users = service.getDemandesDinscriptionsAppreneurs();
     assertEquals(users, mockList);
   }
 
   @Test
-  public void testAjouterUtilisateur() throws Exception {
-    boolean success = service.ajouterUtilisateur("a12");
-    assertTrue(success);
+  public void testAjouterUtilisateur() {
+    service.ajouterUtilisateur("a12");
     verify(databaseMock).accepterUtilisateur("a12");
-  }
-
-  @Test
-  public void testAjouterUtilisateurQuandDatabaseThrowsException()
-    throws
-      Exception {
-    when(databaseMock.accepterUtilisateur("a12")).thenThrow(new Exception());
-    boolean success = service.ajouterUtilisateur("a12");
-    assertFalse(success, "Hadchi makhdamch");
   }
 
   @Test
@@ -80,14 +75,6 @@ public class AdminServiceTest {
     verify(databaseMock).supprimerUtilisateur("a12");
   }
 
-  @Test
-  public void testsupprimerUtilisateurQuandDatabaseThrowsException()
-    throws
-      Exception {
-    when(databaseMock.supprimerUtilisateur("a12")).thenThrow(new Exception());
-    boolean success = service.supprimerUtilisateur("a12");
-    assertFalse(success);
-  }
 
   @Test
   public void testAjouterFormation() throws Exception {
@@ -97,28 +84,10 @@ public class AdminServiceTest {
   }
 
   @Test
-  public void testAjouterFormationQuandDatabaseThrowsException()
-    throws
-      Exception {
-    when(databaseMock.accepterFormation("a12")).thenThrow(new Exception());
-    boolean success = service.ajouterFormation("a12");
-    assertFalse(success);
-  }
-
-  @Test
   public void testSupprimerFormation() throws Exception {
     boolean success = service.supprimerFormation("a11");
     assertTrue(success);
     verify(databaseMock).supprimerFormation("a11");
-  }
-
-  @Test
-  public void testSupprimerFormationQuandDatabaseThrowsException()
-    throws
-      Exception {
-    when(databaseMock.supprimerFormation("a12")).thenThrow(new Exception());
-    boolean success = service.supprimerFormation("a12");
-    assertFalse(success);
   }
 
 }
